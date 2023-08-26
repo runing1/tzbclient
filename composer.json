@@ -1,0 +1,25 @@
+{
+    "name": "zxm.test/tzbclient",
+    "description": "tzb sdk",
+    "type": "l",
+	"autoload": {
+		"psr-4": {
+			"Tzb\\TzbClient\\": "src/",
+			"Tzb\\TzbClient\\Utils\\": "src/utils"
+		}
+	},
+    "require": {
+        "php": ">=7.2",
+        "mdanter/ecc": "^1.0",
+        "lpilp/guomi": "v1.0.6",
+        "ext-json": "*",
+        "pear/http_request2": "v2.5.0"
+    },
+    "authors": [
+        {
+            "name": "zxm11",
+            "email": "503563951@qq.com"
+        }
+    ],
+    "minimum-stability": "stable"
+}
