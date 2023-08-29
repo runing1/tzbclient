@@ -1,10 +1,9 @@
 <?php /** @noinspection ALL */
 
 namespace TzbClient;
-require_once '../vendor/autoload.php';
-require_once 'utils/sm4.php';
-require_once 'utils/httpUtils.php';
-
+// require_once '../vendor/autoload.php';
+// require_once 'utils/sm4.php';
+// require_once 'utils/httpUtils.php';
 use Rtgm\sm\RtSm2;
 use Rtgm\sm\RtSm3;
 use TzbClient\utils\HttpUtils;
@@ -15,25 +14,25 @@ class Client
 {
     function tokenRequest($requestUrl, $appKey, $appScrect, $param, $publicKey, $privateKey)
     {
-        printf("appKey:%s,请求tokenURL:%s\n", $appKey, $requestUrl);
+        // printf("appKey:%s,请求tokenURL:%s\n", $appKey, $requestUrl);
         $sm2 = new RtSm2('hex', true);
         $sm3 = new RtSm3();
         $sm4 = new SM4();
         $uuid = $this->getGUID();
         $tranDate = date("Y-m-d H:i:s.v");
         $inputDic = array("equUniSeqNo" => $param, "randomSec" => $uuid, "tranDate" => $tranDate);
-        printf("获取token原始报文:%s\n", json_encode($inputDic, JSON_UNESCAPED_UNICODE));
+        // printf("获取token原始报文:%s\n", json_encode($inputDic, JSON_UNESCAPED_UNICODE));
         $sm3sgin = $sm3->digest(json_encode($inputDic, JSON_UNESCAPED_UNICODE));
-        printf("SM3散列:%s\n", $sm3sgin);
+        // printf("SM3散列:%s\n", $sm3sgin);
         $sign = $sm2->doSign(hex2bin($sm3sgin), $privateKey, hex2bin("1234567812345678"));
-        printf("签名:%s\n", $sign);
+        // printf("签名:%s\n", $sign);
         $inputDic['x-sign'] = $sign;
         $eyInputAndSginJson = $sm4->setKey($appScrect)->encryptData(json_encode($inputDic, JSON_UNESCAPED_UNICODE));
-        printf("加密后请求:%s\n", $sm3sgin);
+        // printf("加密后请求:%s\n", $sm3sgin);
         $headerMap = array("x-appKey" => $appKey);
         $httpUtils = new HttpUtils();
         $resultDic = $httpUtils->post($requestUrl, $eyInputAndSginJson, $headerMap);
-        printf("获取token返回报文:%s\n", json_encode($resultDic, JSON_UNESCAPED_UNICODE));
+        // printf("获取token返回报文:%s\n", json_encode($resultDic, JSON_UNESCAPED_UNICODE));
         if ($resultDic == null) {
             return json_encode(array("retType" => 'E', "retCode" => 'sdk10002', "retMsg" => "通讯失败"), JSON_UNESCAPED_UNICODE);
         }
@@ -61,23 +60,23 @@ class Client
         $sm2 = new RtSm2('hex', true);
         $sm3 = new RtSm3();
         $sm4 = new SM4();
-        printf("请求接口url:%s\n", $requestUrl);
-        printf("原始报文:%s\n", $inputDic);
+        // printf("请求接口url:%s\n", $requestUrl);
+        // printf("原始报文:%s\n", $inputDic);
         $httpUtils = new HttpUtils();
         $inputDic = json_decode($inputDic, true, 512);
         $inputDic['token'] = $token;
         $inputAndToken = json_encode($inputDic, JSON_UNESCAPED_UNICODE);
         $inputAndToken = str_replace("\\", "", $inputAndToken);
         $sm3sgin = $sm3->digest($inputAndToken);
-        printf("sm3散列:%s\n", $sm3sgin);
+        // printf("sm3散列:%s\n", $sm3sgin);
         $sign = $sm2->doSign(hex2bin($sm3sgin), $privateKey, hex2bin("1234567812345678"));
-        printf("签名sign:%s\n", $sign);
+        // printf("签名sign:%s\n", $sign);
         $inputDic['x-sign'] = $sign;
         $headerMap = array("x-appKey" => $appKey, "token" => $token);
         $sm4inputS = $sm4->setKey($randomSec)->encryptData(json_encode($inputDic));
-        printf("sm4加密报文:%s\n", $sm3sgin);
+        // printf("sm4加密报文:%s\n", $sm3sgin);
         $resultDic = $httpUtils->post($requestUrl, $sm4inputS, $headerMap);
-        printf("开放平台返回报文:%s\n", json_encode($resultDic, JSON_UNESCAPED_UNICODE));
+        // printf("开放平台返回报文:%s\n", json_encode($resultDic, JSON_UNESCAPED_UNICODE));
         if ($resultDic == null) {
             return json_encode(array("retType" => 'E', "retCode" => 'sdk10002', "retMsg" => "通讯失败"), JSON_UNESCAPED_UNICODE);
         }

@@ -1,4 +1,6 @@
 <?php
+namespace TzbClient;
+
 class OpenReq {
     /**
      * 请求头reqHeader

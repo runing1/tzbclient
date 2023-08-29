@@ -1,5 +1,5 @@
 <?php
-
+namespace TzbClient\Utils;
 /**
  * Created by PhpStorm.
  * User: KeenSting

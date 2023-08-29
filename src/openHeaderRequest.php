@@ -1,4 +1,6 @@
 <?php
+namespace TzbClient;
+
 class OpenHeaderRequest
 {
     var $tranDate; //交易日期 yyyyMMdd
