@@ -3,6 +3,7 @@
 namespace TzbClient\Utils;
 
 use HTTP_Request2;
+use HTTP_Request2_Exception;
 
 class HttpUtils
 {
